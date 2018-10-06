@@ -6,6 +6,8 @@ from email.encoders import encode_base64
 import os
 import easyimap
 import time
+from cloud import SentimentParse
+from wordParser import WordParser
 
 #HI LIAM
 
@@ -32,6 +34,36 @@ def send_email(smtpObj, sender, receiver, message):
     print("Sent to ", receiver)
     smtpObj.sendmail(sender, receiver, msg.as_string())
 
+#returns info on mail to be accepted and forwarded
+def get_message_data_forward(mail, username):
+    to = mail.to #"example+person+inbox+gmail+com@gmail.com"
+    to = to.split("@")[0].split("+")[1:]
+    name = "+".join(to[:-2]) #Using negative indices to support arbitrary + in original email account
+    to = name + "@" + to[-2] + "." + to[-1]
+    message = {'reply': mail.from_addr, 'subject': mail.title,
+               'body': mail.body, 'files': mail.attachments}
+    username = username.split("@")
+    sender = "@".join(["+".join([username[0], mail.from_addr.replace("@", "+").replace(".", "+")]), username[1]]) #Injects sender's email address in plus fields of our email address
+    return to, message, sender
+
+#returns info on mail to be rejected and relayed back to the sender
+def get_message_data_reply(mail, username, issues):
+    to = mail.from_addr
+    message = {'reply': username,
+               'subject': "Compliance Accomplice detected issues with \"" + mail.title + "\"",
+               'body': "\n\n".join(issues), 'files': mail.attachments}
+    return to, message, username
+
+#THIS IS WHERE THE MAGIC HAPPENS
+def detect_issues(mail):
+    issues = []
+    #issues.append(wordParser(subject))
+    #issues.append(wordParse(body))
+    #issues.append(cloud(body))
+    return issues
+
+
+
 #The main method, takes our gmail username and password
 def redirect_email(username, password):
     imapper = easyimap.connect('imap.gmail.com', username, password) #connect to receive
@@ -40,15 +72,14 @@ def redirect_email(username, password):
     smtpObj.starttls()
     smtpObj.login(username, password)
     for mail in imapper.unseen(limit=100): #only grabs unread messages
-        to = mail.to #"example+person+inbox+gmail+com@gmail.com"
-        to = to.split("@")[0].split("+")[1:]
-        name = "+".join(to[:-2]) #Using negative indices to support arbitrary + in original email account
-        to = name + "@" + to[-2] + "." + to[-1]
-        message = {'reply': mail.from_addr, 'subject': mail.title,
-                   'body': mail.body, 'files': mail.attachments}
-        username = username.split("@")
-        sender = "@".join(["+".join([username[0], mail.from_addr.replace("@", "+").replace(".", "+")]), username[1]]) #Injects sender's email address in plus fields of our email address
         print("Received from ", mail.from_addr)
+        issues = detect_issues(mail)
+        if len(issues) == 0: #No issues detected
+            print("No issues detected.")
+            to, message, sender = get_message_data_forward(mail, username)
+        else:
+            print("Issues detected")
+            to, message, sender = get_message_data_reply(mail, username, issues)
         send_email(smtpObj, sender, to, message)
 
 
