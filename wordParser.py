@@ -11,8 +11,8 @@ class WordParser:
     PROFANITY_LOCATION = "datasets/swearWords.csv"
     # source https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
     #creative commons license
-    PROFANITY_FLAG_TEXT = "Your use of the word \"{}\" in the sentence \"{}\" seems inappropriate.\nWe highly recommend you reconsider your wording.\n\n"
-    
+    PROFANITY_FLAG_TEXT = "Your use of the word \"{}\" in the sentence \"{}\" may be inappropriate.\nWe recommend you reconsider your wording.\n\n"
+
     """
     Constructor fo WordParser class. Builds a list of sentences from email
     with TextBlob and loads the swearWords csv into the dictionary, profanity.
