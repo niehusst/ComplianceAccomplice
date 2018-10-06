@@ -56,25 +56,25 @@ super smart machine! Reconsider your life choices. "
                     suspicious_words.append(mention.text.content)
 
         return suspicious_words
-                
 
-        
+
+
 
     #that fishes out the topic of the text
     def check_for_topic(self,document,verbose=True):
         response = self.client.classify_text(document)
         categories = response.categories
         result = {}
-        
+
 
         for category in categories:
             # Turn the categories into a dictionary of the form:
             # {category.name: category.confidence}, so that they can
             # be treated as a sparse vector.
             result[category.name] = category.confidence
-        
+
         if verbose:
-            
+
             for category in categories:
 
                 if category.confidence > 0.8 and ('/Finance' in category.name or '/Investing' in category.name ):
@@ -92,7 +92,7 @@ super smart machine! Reconsider your life choices. "
             content=email_text,
             type=enums.Document.Type.PLAIN_TEXT)
         annotations = self.client.analyze_sentiment(document=document)
-        
+
         #sentiment analysis of the entire thing
         #score = annotations.document_sentiment.score
         #magnitude = annotations.document_sentiment.magnitude
@@ -113,16 +113,3 @@ super smart machine! Reconsider your life choices. "
                     self.RESPONSE_SENT.append(resp) #check that
 
         return self.RESPONSE_SENT
-        
-
-
-    
-
-
-
-
-
-    
-
-
-   
