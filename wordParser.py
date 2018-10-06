@@ -52,7 +52,7 @@ class WordParser:
         #check if each word in the email is profane
         for sent in self.email:
             for word in sent.words:
-                if word in self.profanity:
+                if word.lower() in self.profanity:
                     #flag profane word, add it to response
                     self.response += PROFANITY_FLAG_TEXT.format(word, sent)
 
