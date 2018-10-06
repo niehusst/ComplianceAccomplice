@@ -28,9 +28,10 @@ class SentimentParse:
     client = language.LanguageServiceClient()
     SENTIMENT_FLAG = "The use of word(s) \"{}\" in the sentence: \n \"{}\" \n was found questionable by our \
 super smart machine! Reconsider your life choices. "
-    RESPONSE_SENT = []
     IMPER_FLAG = "The use of imperative verb(s) \"{}\" in the sentence: \n \"{}\" \nis discouraged"
 
+    def __init__(self):
+        self.RESPONSE_SENT = []
 
     def analyzeSyntax(self,doc):
         tokens = self.client.analyze_syntax(doc).tokens
@@ -74,10 +75,9 @@ super smart machine! Reconsider your life choices. "
             result[category.name] = category.confidence
 
         if verbose:
-
             for category in categories:
 
-                if category.confidence > 0.8 and ('/Finance' in category.name or '/Investing' in category.name ):
+                if category.confidence > 0.6 and ('/Finance' in category.name or '/Investing' in category.name ):
                     return True
 
         return False
@@ -92,7 +92,6 @@ super smart machine! Reconsider your life choices. "
             content=email_text,
             type=enums.Document.Type.PLAIN_TEXT)
         annotations = self.client.analyze_sentiment(document=document)
-
         #sentiment analysis of the entire thing
         #score = annotations.document_sentiment.score
         #magnitude = annotations.document_sentiment.magnitude
@@ -111,5 +110,4 @@ super smart machine! Reconsider your life choices. "
                 if suspicious_verbs != []:
                     resp = self.IMPER_FLAG.format(",".join(suspicious_verbs), sentence.text.content)
                     self.RESPONSE_SENT.append(resp) #check that
-
         return self.RESPONSE_SENT

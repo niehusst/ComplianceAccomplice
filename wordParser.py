@@ -21,7 +21,7 @@ class WordParser:
     response - String, the response message that will be built up from issues
                found by WordParser
     """
-    def __init__(self, email, response):
+    def __init__(self, email):
         self.PROFANITY_LOCATION = "datasets/swearWords.csv"
         # source https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
         #creative commons license
@@ -30,7 +30,7 @@ class WordParser:
         self.email = TextBlob(email).sentences
         #load csv to self.profanity
         self.profanity = self.csv_to_dict(self.PROFANITY_LOCATION)
-        self.response = response
+        self.response = []
 
     """
     Reads the swearWords csv file found at PROFANITY_LOCATION into a dictionary
@@ -60,7 +60,7 @@ class WordParser:
             for word in sent.words:
                 if word.lower() in self.profanity:
                     #flag profane word, add it to response
-                    self.response += self.PROFANITY_FLAG_TEXT.format(word, sent)
+                    self.response.append(self.PROFANITY_FLAG_TEXT.format(word, sent))
 
     """
     Retrieve the response text. (should be called after search_profanity)

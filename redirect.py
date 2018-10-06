@@ -51,15 +51,20 @@ def get_message_data_reply(mail, username, issues):
     to = mail.from_addr
     message = {'reply': username,
                'subject': "Compliance Accomplice detected issues with \"" + mail.title + "\"",
-               'body': "\n\n".join(issues), 'files': mail.attachments}
+               'body': "\n".join(issues), 'files': mail.attachments}
     return to, message, username
 
 #THIS IS WHERE THE MAGIC HAPPENS
 def detect_issues(mail):
     issues = []
-    #issues.append(wordParser(subject))
-    #issues.append(wordParse(body))
-    #issues.append(cloud(body))
+    wp = WordParser(mail.title)
+    wp.search_profanity()
+    issues += wp.get_response()
+    wp = WordParser(mail.body)
+    wp.search_profanity()
+    issues += wp.get_response()
+    sp = SentimentParse()
+    issues += sp.analyze_text(mail.body)
     return issues
 
 
@@ -75,7 +80,7 @@ def redirect_email(username, password):
         print("Received from ", mail.from_addr)
         issues = detect_issues(mail)
         if len(issues) == 0: #No issues detected
-            print("No issues detected.")
+            print("No issues detected.") #TODO: Reply
             to, message, sender = get_message_data_forward(mail, username)
         else:
             print("Issues detected")
