@@ -20,7 +20,7 @@ class WordParser:
         self.PROFANITY_LOCATION = "datasets/swearWords.csv"
         # source https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words
         #creative commons license
-        self.PROFANITY_FLAG_TEXT = "Your use of the word \"{}\" in the sentence \"{}\" may be inappropriate.\nWe recommend you reconsider your wording.\n\n"
+        self.PROFANITY_FLAG_TEXT = "Your use of the word \"{}\" in the sentence \"{}\" may be inappropriate.\nWe recommend you reconsider your wording.\n"
 
         self.email = TextBlob(email).sentences
         #load csv to self.profanity
