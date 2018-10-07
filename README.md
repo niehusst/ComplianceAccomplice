@@ -30,6 +30,6 @@ must send emails through the filter installed on your own server (using incoming
  * **Philip Kiely** - [philipkiely](https://github.com/philipkiely)
 
 ### Sources/Acknowledgements
- * [Google Cloud NLP](https://cloud.google.com/natural-language/) for sentiment assesment of text.
+ * [Google Cloud NLP](https://cloud.google.com/natural-language/) for sentiment assessment of text.
  * [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words) for dataset of profane words.
  * [Tailor Brands](https://www.tailorbrands.com/) for the logo.
