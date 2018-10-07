@@ -33,6 +33,13 @@ def send_email(smtpObj, sender, receiver, message, dir):
             part.add_header('Content-Disposition', 'attachment; filename="%s"'
                             % os.path.basename(file))
             msg.attach(part)
+    if sender == username: #logo in reply
+        part = MIMEBase('application', 'octet-stream') #attach logo
+        part.set_payload(open("res/logo.png", 'rb').read())
+        encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename="%s"'
+                        % os.path.basename("logo.png"))
+        msg.attach(part) #logo attached
     print("Sent to ", receiver)
     smtpObj.sendmail(sender, receiver, msg.as_string())
 
