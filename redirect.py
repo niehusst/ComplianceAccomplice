@@ -77,9 +77,7 @@ def get_message_data_reply(mail, username, issues):
     body += mail.body
     file = open("reply.html")
     html = file.read().replace("\n","<br>")
-    html = html.format("<br>".join(issues))
-    html += "____ORIGINAL MESSAGE____"
-    html += mail.body
+    html = html.format("<br>".join(issues), "<br>".join(mail.body.split("\n")))
     message = {'reply': mail.to,
                'subject': "Compliance Accomplice detected issues with \"" + mail.title + "\"",
                'body': html}
@@ -118,7 +116,11 @@ def redirect_email(username, password):
             to = name + "@" + to[-2] + "." + to[-1]
             message = {"reply": sender,
                        "subject": mail.title.split("\"")[1],
-                       "body": mail.body.split("____ORIGINAL MESSAGE____")[1]}
+                       "body": mail.body.split("Your orignal message")[1].strip("</p>\
+                   </div>\
+               </div>\
+               </body>\
+               </html>")}
             send_email(smtpObj, sender, to, message, False)
         else: #New message to process
             dir = handle_attachments(mail.attachments)

@@ -52,7 +52,6 @@ class SentimentParse:
         suspicious_words = []
         for entity in result.entities:
             for mention in entity.mentions:
-                print(mention.sentiment.score)
                 if (mention.sentiment.score-0.01 > 0.1 or mention.sentiment.score + 0.01 < -0.1) and abs(mention.sentiment.magnitude) > 0.01 and entity.salience > 0.01:
                     suspicious_words.append(mention.text.content)
 
