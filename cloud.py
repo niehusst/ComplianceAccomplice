@@ -63,7 +63,10 @@ super smart machine! Reconsider your life choices. "
 
     #that fishes out the topic of the text
     def check_for_topic(self,document,verbose=True):
-        response = self.client.classify_text(document)
+        try:
+            response = self.client.classify_text(document)
+        except:
+            return False
         categories = response.categories
         result = {}
 
