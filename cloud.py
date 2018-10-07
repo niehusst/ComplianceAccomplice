@@ -26,7 +26,7 @@ THE BOUNDS, CHECK MAGNITUDE.
 
 class SentimentParse:
     client = language.LanguageServiceClient()
-    SENTIMENT_FLAG = "The use of word(s) \"{}\" in the sentence: \n \"{}\" \n may be an issue."
+    SENTIMENT_FLAG = "The sentence: \n \"{}\" \n may be an issue."
     IMPER_FLAG = "The use of imperative verb(s) \"{}\" in the financial sentence: \n \"{}\" \nis discouraged"
 
     def __init__(self):
@@ -106,10 +106,10 @@ class SentimentParse:
                     type=enums.Document.Type.PLAIN_TEXT)
                 suspicious_words = self.analyze_words(doc)
                 if suspicious_words != []:
-                    resp = self.SENTIMENT_FLAG.format(",".join(suspicious_words), sentence.text.content)
+                    resp = self.SENTIMENT_FLAG.format(sentence.text.content)
                     self.RESPONSE_SENT.append(resp) #check that
                 suspicious_verbs = self.analyzeSyntax(doc)
                 if suspicious_verbs != []:
-                    resp = self.IMPER_FLAG.format(",".join(suspicious_verbs), sentence.text.content)
+                    resp = self.IMPER_FLAG.format(", ".join(suspicious_verbs), sentence.text.content)
                     self.RESPONSE_SENT.append(resp) #check that
         return self.RESPONSE_SENT
