@@ -1,1 +1,7 @@
-easyimap
+// install
+pip install easyimap
+pip install textblob
+pip install google-cloud-language
+
+// to run
+python3 redirect.py
