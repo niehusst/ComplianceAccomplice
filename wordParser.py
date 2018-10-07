@@ -4,7 +4,7 @@ import nltk
 
 
 """
-Class that parses a email as a string and analyzes it for clearly
+Class that parses a string and analyzes it for clearly
 inappropriate language
 """
 class WordParser:
