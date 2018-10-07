@@ -23,7 +23,7 @@ def send_email(smtpObj, sender, receiver, message, dir):
     msg['To'] = receiver
     msg['Subject'] = message['subject']
     msg['reply-to'] = message['reply']
-    msg.attach(MIMEText(message['body']))
+    msg.attach(MIMEText(message['body'], 'html'))
     if dir:
         files = os.listdir(dir)
         for file in files:
@@ -66,12 +66,16 @@ def get_message_data_forward(mail, username):
 def get_message_data_reply(mail, username, issues):
     to = mail.from_addr
     body = "\n".join(issues)
-    body += "____ORIGINAL MESSAGE____"
+    body += "____ORIGINAL MESSAGE____\n"
     body += mail.body
-    temp = username.split("@")
+    file = open("reply.html")
+    html = file.read().replace("\n","<br>")
+    html = html.format("<br>".join(issues))
+    html += "____ORIGINAL MESSAGE____"
+    html += mail.body
     message = {'reply': mail.to,
                'subject': "Compliance Accomplice detected issues with \"" + mail.title + "\"",
-               'body': body}
+               'body': html}
     return to, message, username
 
 #THIS IS WHERE THE MAGIC HAPPENS
