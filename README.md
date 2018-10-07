@@ -1,3 +1,4 @@
+![Logo](res/logo.png)
 # Compliance Accomplice
 An email system middleware for detecting and archiving potential SEC compliance issues in a self-hosted email server using Natural Language Processing (NLP).
 
