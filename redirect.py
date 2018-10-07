@@ -23,7 +23,7 @@ def send_email(smtpObj, sender, receiver, message, dir):
     msg['To'] = receiver
     msg['Subject'] = message['subject']
     msg['reply-to'] = message['reply']
-    msg.attach(MIMEText(message['body']))
+    msg.attach(MIMEText(message['body'], 'html'))
     if dir:
         files = os.listdir(dir)
         for file in files:
@@ -53,8 +53,7 @@ def handle_attachments(atts):
 
 #returns info on mail to be accepted and forwarded
 def get_message_data_forward(mail, username):
-    to = mail.to #"example+person+inbox+gmail+com@gmail.com"
-    to = to.split("@")[0].split("+")[1:]
+    to = mail.to.split("@")[0].split("+")[1:] #"example+person+inbox+gmail+com@gmail.com"
     name = "+".join(to[:-2]) #Using negative indices to support arbitrary + in original email account
     to = name + "@" + to[-2] + "." + to[-1]
     message = {'reply': mail.from_addr, 'subject': mail.title,
@@ -66,9 +65,17 @@ def get_message_data_forward(mail, username):
 #returns info on mail to be rejected and relayed back to the sender
 def get_message_data_reply(mail, username, issues):
     to = mail.from_addr
-    message = {'reply': username,
+    body = "\n".join(issues)
+    body += "____ORIGINAL MESSAGE____\n"
+    body += mail.body
+    file = open("reply.html")
+    html = file.read().replace("\n","<br>")
+    html = html.format("<br>".join(issues))
+    html += "____ORIGINAL MESSAGE____"
+    html += mail.body
+    message = {'reply': mail.to,
                'subject': "Compliance Accomplice detected issues with \"" + mail.title + "\"",
-               'body': "\n".join(issues)}
+               'body': html}
     return to, message, username
 
 #THIS IS WHERE THE MAGIC HAPPENS
@@ -95,15 +102,27 @@ def redirect_email(username, password):
     smtpObj.login(username, password)
     for mail in imapper.unseen(limit=100): #only grabs unread messages
         print("Received from ", mail.from_addr)
-        dir = handle_attachments(mail.attachments)
-        issues = detect_issues(mail)
-        if len(issues) == 0: #No issues detected
-            print("No issues detected.") #TODO: Reply
-            to, message, sender = get_message_data_forward(mail, username)
-        else:
-            print("Issues detected")
-            to, message, sender = get_message_data_reply(mail, username, issues)
-        send_email(smtpObj, sender, to, message, dir)
+        if "Re: Compliance Accomplice detected issues with" in mail.title:
+            print("Forwarding Initial Message")
+            #Send original message
+            sender = mail.to
+            to = mail.to.split("@")[0].split("+")[1:]
+            name = "+".join(to[:-2]) #Using negative indices to support arbitrary + in original email account
+            to = name + "@" + to[-2] + "." + to[-1]
+            message = {"reply": sender,
+                       "subject": mail.title.split("\"")[1],
+                       "body": mail.body.split("____ORIGINAL MESSAGE____")[1]}
+            send_email(smtpObj, sender, to, message, False)
+        else: #New message to process
+            dir = handle_attachments(mail.attachments)
+            issues = detect_issues(mail)
+            if len(issues) == 0: #No issues detected
+                print("No issues detected.")
+                to, message, sender = get_message_data_forward(mail, username)
+            else:
+                print("Issues detected")
+                to, message, sender = get_message_data_reply(mail, username, issues)
+            send_email(smtpObj, sender, to, message, dir)
 
 
 
