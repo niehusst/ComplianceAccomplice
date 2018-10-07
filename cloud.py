@@ -26,9 +26,8 @@ THE BOUNDS, CHECK MAGNITUDE.
 
 class SentimentParse:
     client = language.LanguageServiceClient()
-    SENTIMENT_FLAG = "The use of word(s) \"{}\" in the sentence: \n \"{}\" \n was found questionable by our \
-super smart machine! Reconsider your life choices. "
-    IMPER_FLAG = "The use of imperative verb(s) \"{}\" in the sentence: \n \"{}\" \nis discouraged"
+    SENTIMENT_FLAG = "The use of word(s) \"{}\" in the sentence: \n \"{}\" \n may be an issue."
+    IMPER_FLAG = "The use of imperative verb(s) \"{}\" in the financial sentence: \n \"{}\" \nis discouraged"
 
     def __init__(self):
         self.RESPONSE_SENT = []
@@ -53,7 +52,8 @@ super smart machine! Reconsider your life choices. "
         suspicious_words = []
         for entity in result.entities:
             for mention in entity.mentions:
-                if (mention.sentiment.score-0.01 > 0 or mention.sentiment.score + 0.01 < 0) and abs(mention.sentiment.magnitude) > 0.01 and entity.salience > 0.01:
+                print(mention.sentiment.score)
+                if (mention.sentiment.score-0.01 > 0.1 or mention.sentiment.score + 0.01 < -0.1) and abs(mention.sentiment.magnitude) > 0.01 and entity.salience > 0.01:
                     suspicious_words.append(mention.text.content)
 
         return suspicious_words
