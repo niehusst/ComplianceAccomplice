@@ -25,6 +25,8 @@ Integrating this system into your company only requires changes in your
 email system configuration. To enable Compliance Accomplice to see your email, you
 must send emails through the filter installed on your own server (using incoming/outgoing ports to block the message from sending before filter) and the system would use normal addresses.
 
+**NOTE:** The Google Cloud project that hosted this code has been taken down, as has the email address (compliance.accomplice@gmail.com). For this code to work, you will have to set up your own Cloud server to host you, and designate a new intermediary email address.   
+
 ### Authors
  * **Bogdan Abaev** - [abaevbog](https://github.com/abaevbog)
  * **Liam Niehus-Staab** - [niehusst](https://github.com/niehusst)
