@@ -3,5 +3,11 @@ pip install easyimap
 pip install textblob
 pip install google-cloud-language
 
+// set environment var
+export GOOGLE_APPLICATION_CREDENTIALS="/absolute/path/to/HackUIowa/code.json"
+
 // to run
 python3 redirect.py
+
+// get use middleware
+Send email to compliance.accomplice+youremail+youremaildomain+extension@gmail.com

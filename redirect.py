@@ -136,9 +136,9 @@ def redirect_email(username, password):
 
 
 if __name__=="__main__":
-    #Alex would store these as environment variables. I just use a throwaway gmail account.
+    #For security, store these as environment variables. I just use a throwaway gmail account. If you seriously intend to use this software, you will need to make your own mail account for this to go through
     username = 'compliance.accomplice@gmail.com'
-    password = 'HackUIowa2018GG'
+    password = '***********'
     print("Started Compliance Accomplice email middleware system.")
     while(True):
         print("Checking for unread email...")
